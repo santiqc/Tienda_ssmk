@@ -1,0 +1,52 @@
+{% extends "layout.html" %} <!-- se hace el bloque para luego meter diseño con solo el archivo layout.html -->
+{% block body %}
+
+{% with messages = get_flashed_messages() %} {%if messages %} {% for message in
+messages %}
+<p>{{ message }}</p>
+{% endfor %} {% endif %} {% endwith %}
+<form action="/add_usuario" method="POST">
+  <input type="text" name="nombre" placeholder="Nombre" minlength="5" maxlength="255" required />
+  <input type="text" name="movil" placeholder="Movil" minlength="7" maxlength="20" "/>
+  <input type="number" name="saldo" placeholder="Saldo" required />
+  <button type="submit">Guardar</button>
+</form>
+
+
+<table>
+  <thead>
+    <tr>
+      <td>Id</td>
+      <td>Nombre</td>
+      <td>Movil</td>
+      <td>saldo</td>
+      <td>Operations</td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cliente in clientes %}
+    <tr>
+      <td>{{ cliente.0 }}</td>
+      <td>{{ cliente.1 }}</td>
+      <td>{{ cliente.2 }}</td>
+      <td>{{ cliente.3 }}</td>
+      <td>
+        <a href="/edit/{{cliente.0}}">Edit</a>
+        <a href="/delete/{{cliente.0}}">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+<form action="/buscar" method="POST">
+  <p>Buscar usuario</p>
+  <input type="text" name="nombre" placeholder="Nombre" />
+  <button type="submit">buscar</button>
+
+</form>
+
+
+{% endblock %}
