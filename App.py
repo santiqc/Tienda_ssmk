@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask.helpers import total_seconds
 from flask_mysqldb import MySQL
 from wtforms import validators
 
@@ -32,13 +33,30 @@ def add_usuario():
         nombre = request.form['nombre']
         movil = request.form['movil']
         saldo = request.form['saldo']
+        msj = f"select * from clientes "
         cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO clientes (nombre,movil,saldo) VALUES (%s, %s, %s)',
-                    (nombre, movil, saldo))
-        mysql.connection.commit()
-        flash('Usuario agregado satisfactoriamente')
+        cur.execute(msj)
+        datos = cur.fetchall()
+        print(nombre)
+        dato = nombre
 
-        return redirect(url_for('Index'))
+        try:
+
+            cur = mysql.connection.cursor()
+            cur.execute('INSERT INTO clientes (nombre,movil,saldo) VALUES (%s, %s, %s)',
+                        (nombre, movil, saldo))
+            mysql.connection.commit()
+            flash('Usuario agregado satisfactoriamente')
+
+        except:
+            for elemento in datos:
+                for i in elemento:
+                    if i == dato:
+                        flash('Usuaro ya existente')
+                        break
+
+        finally:
+            return redirect(url_for('Index'))
 
 
 # selecciona el usuario en la posicion para luego hacer la accion de actualizacion
@@ -57,7 +75,26 @@ def update_usuario(id):
         movil = request.form['movil']
         saldo = request.form['saldo']
         print('*************************************')
+        #se devuelve trae el valor del saldo de mysql y se hace la operacion con el nuevo saldo y lo veelve a guardar
+        #en la base de datos 
+        msj = f"select saldo from clientes where id='{id}'"
+        cur = mysql.connection.cursor()
+        cur.execute(msj)
+        datos = cur.fetchall()
+        resultado = datos
+        
+        print(resultado)
         print(saldo)
+        sal=float(saldo)
+        print(sal)
+        for x in range (len(resultado)):
+            tupla1=resultado[x]
+            for i in range (len(tupla1)):
+                tupla2=tupla1[i]
+                tuplaa=tupla2+sal
+                print(tuplaa)
+        saldo=tuplaa
+        print('*************************************')
         cur = mysql.connection.cursor()
         cur.execute("""
             UPDATE clientes

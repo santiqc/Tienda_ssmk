@@ -1,17 +1,30 @@
-{% extends "layout.html" %} <!-- se hace el bloque para luego meter diseño con solo el archivo layout.html -->
-{% block body %}
-
-{% with messages = get_flashed_messages() %} {%if messages %} {% for message in
-messages %}
+{% extends "layout.html" %}
+<!-- se hace el bloque para luego meter diseño con solo el archivo layout.html -->
+{% block body %} {% with messages = get_flashed_messages() %} {%if messages %}
+{% for message in messages %}
 <p>{{ message }}</p>
 {% endfor %} {% endif %} {% endwith %}
 <form action="/add_usuario" method="POST">
-  <input type="text" name="nombre" placeholder="Nombre" minlength="5" maxlength="255" required />
-  <input type="text" name="movil" placeholder="Movil" minlength="7" maxlength="20" "/>
+  <input
+    type="text"
+    name="nombre"
+    placeholder="Nombre"
+    minlength="2"
+    maxlength="255"
+    required
+  />
+  <input
+    type="tel"
+    name="movil"
+    placeholder="Movil"
+    pattern="^\+?\d{6,13}"
+    title="Movil (Format: 3104708898)"
+    required
+  />
+  <!-- <input type="text" name="movil" placeholder="Movil" minlength="7" maxlength="10" required "/> -->
   <input type="number" name="saldo" placeholder="Saldo" required />
   <button type="submit">Guardar</button>
 </form>
-
 
 <table>
   <thead>
@@ -39,14 +52,10 @@ messages %}
   </tbody>
 </table>
 
-
-
 <form action="/buscar" method="POST">
   <p>Buscar usuario</p>
   <input type="text" name="nombre" placeholder="Nombre" />
   <button type="submit">buscar</button>
-
 </form>
-
 
 {% endblock %}
